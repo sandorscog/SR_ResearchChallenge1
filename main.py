@@ -103,7 +103,7 @@ def neighbors(object_index, user_index, target_items):
 
     # # # # # # # # # # # # # # #
     for i in target_items:
-        for j in tempting_objects[:250]:
+        for j in tempting_objects[:150]:
             u = []
             v = []
             if i == j:
@@ -141,11 +141,12 @@ def predict_ratings(targets, neighborhood, user_ratings, mean_values, items_mean
             final_rating = items_mean_values[target.ItemId]
 
         else:
-            prediction = rating_prediction(target.ItemId, target.UserId, neighborhood, user_ratings)
-            prediction += (mean_values[target.UserId] + items_mean_values[target.ItemId])/2
+            prediction_value = rating_prediction(target.ItemId, target.UserId, neighborhood, user_ratings)
+            prediction_value += (mean_values[target.UserId] + items_mean_values[target.ItemId])/2
 
             try:
-                final_rating = int(round(prediction, 0))
+                #final_rating = int(round(prediction, 0))
+                final_rating = prediction_value
             except:
                 final_rating = randint(1, 5)
 
@@ -190,14 +191,14 @@ def main():
 
     mean_values = users_means(ratings)
     item_means = items_means(ratings)
+
     item_dense_representation = dense_representation_builder(ratings, mean_values)
     user_dense_representation = dense_representation_user(ratings, mean_values)
-    #print('Neighbors')
+
     neighborhood = neighbors(item_dense_representation, user_dense_representation, targets['ItemId'].unique().tolist())
-    #print('Predictions')
     predictions = predict_ratings(targets, neighborhood, user_dense_representation, mean_values, item_means)
 
-    predictions = predictions.astype({'Rating': int})
+    predictions = predictions.astype({'Rating': float})
     predictions.to_csv(PATH+'resultado.csv', index=False)
 
     print(time()-init)
