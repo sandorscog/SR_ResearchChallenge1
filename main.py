@@ -137,7 +137,7 @@ def predict_ratings(targets, neighborhood, user_ratings, mean_values, items_mean
 
         target_tuple = str(target.UserId) + ':' + str(target.ItemId)
 
-        if neighborhood[target.ItemId][0][0] == 'x':  # or True:
+        if neighborhood[target.ItemId][0][0] == 'x':
             final_rating = items_mean_values[target.ItemId]
 
         else:
@@ -145,7 +145,6 @@ def predict_ratings(targets, neighborhood, user_ratings, mean_values, items_mean
             prediction_value += (mean_values[target.UserId] + items_mean_values[target.ItemId])/2
 
             try:
-                #final_rating = int(round(prediction, 0))
                 final_rating = prediction_value
             except:
                 final_rating = randint(1, 5)
@@ -217,8 +216,8 @@ def teste():
 
     neighborhood = neighbors(dense_representation, user_dense_representation, targets['ItemId'].unique().tolist())
     predictions = predict_ratings(targets, neighborhood, user_dense_representation, mean_values, item_means)
-    predictions = predictions.astype({'Rating': int})
 
+    predictions = predictions.astype({'Rating': int})
     predictions.to_csv(PATH + 'resultado.csv', index=False)
 
 
