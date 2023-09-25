@@ -80,6 +80,9 @@ def neighborhood_viability(object_index):
 
 def neighbors(object_index, user_index, target_items):
 
+    # neighborhoods = {key: [('x', 0)] for key in target_items}
+    # return neighborhoods
+
     neighborhoods = {key: [] for key in target_items}
 
     for item in neighborhood_viability(object_index):
@@ -134,12 +137,12 @@ def predict_ratings(targets, neighborhood, user_ratings, mean_values, items_mean
 
         target_tuple = str(target.UserId) + ':' + str(target.ItemId)
 
-        if neighborhood[target.ItemId][0][0] == 'x' or True:
+        if neighborhood[target.ItemId][0][0] == 'x':  # or True:
             final_rating = items_mean_values[target.ItemId]
 
         else:
             prediction = rating_prediction(target.ItemId, target.UserId, neighborhood, user_ratings)
-            prediction += mean_values[target.UserId]
+            prediction += (mean_values[target.UserId] + items_mean_values[target.ItemId])/2
 
             try:
                 final_rating = int(round(prediction, 0))
